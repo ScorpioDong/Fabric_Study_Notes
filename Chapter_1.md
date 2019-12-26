@@ -11,7 +11,9 @@
 - ## 修改 项目文件
    1. ### 修改文件路径名为自己的包名（src\main\java\net\fabricmc\example -> src\main\java\com\github\haodong1101）
    2. ### 修改模组主文件名为自己的模组名（ExampleMod.java -> DemoMod.java）
-   3. ### 修改资源文件路径名（src\main\resources\assets\modid -> src\main\resources\assets\demo）
+   3. ### 改正模组主文件中的包名和类名
+       ![image](./Resource/image/10.png)
+   4. ### 修改资源文件路径名（src\main\resources\assets\modid -> src\main\resources\assets\demo）
 - ## 修改 src\main\resources\fabric.mod.json 文件
    1. ### "id" 模组ID
    2. ### "name"   模组名
@@ -23,5 +25,20 @@
 - ## 构建Gradle项目
    1. ### 进入项目根目录，选择资源管理器的菜单：文件-> 打开Windows PowerShell
    2. ### 命令行中输入 
-            .\gradle idea
-    1. ### 等待命令完成 （中国大陆由于众所周知的原因，此命令可能较慢或者失败，请多次尝试，或使用代理）
+            .\gradlew idea
+   3. ### 等待命令完成 （中国大陆由于众所周知的原因，此命令可能较慢或者失败，请多次尝试，或使用代理）
+       ![image](./Resource/image/3.png)
+   4. ### 当出现绿色 BUILD SUCCESSFUL 字样时，表示构建成功，然后打开文件夹中的 .ipr 文件
+       ![image](./Resource/image/4.png)
+   5. ### 打开后，选择右下角的 Import Gradle Project 等待idea自动构建完成
+       ![image](./Resource/image/5.png)
+   6. ### 右侧 Gradle 标签页，执行 genSource 任务
+       ![image](./Resource/image/6.png)
+      ### 等待执行成功
+       ![image](./Resource/image/7.png)
+   7. ### 配置运行项
+       ![image](./Resource/image/8.png)
+      ### Use ClassPath of Module选择带 .main后缀的项目 （同时设置Minecraft Client和Minecraft Server）  
+       ![image](./Resource/image/9.png)
+   8. ### 现在就已经可以正常运行Minecraft了
+       ![image](./Resource/image/11.png)
