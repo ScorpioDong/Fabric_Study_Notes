@@ -60,39 +60,71 @@
   - 使用`FabricItemGroupBuilder` 来添加创造标签栏，一旦`FabricItemGroupBuilder.build()`被调用，该标签栏就将添加在创造栏的列表中
 
     ~~~java
-    public static final ItemGroup DEMO_GROUP = FabricItemGroupBuilder.create(
+    //静态创建
+    public static final ItemGroup DEMO_GROUP = FabricItemGroupBuilder.build(
+                new Identifier("demo", "demo_group"),
+                () -> new ItemStack(INSTANCE.GREEN_APPLE_ITEM)); //图标物品
+    //动态创建
+  public static final ItemGroup DEMO_GROUP = FabricItemGroupBuilder.create(
                 new Identifier("demo", "demo_group"))
-                .icon(() -> new ItemStack(GREEN_APPLE_ITEM))
+              .icon(() -> new ItemStack(GREEN_APPLE_ITEM))
                 .build();
-    ~~~
-
+  ~~~
+  
   - 添加物品到创造标签栏
-
-    - 第一种方式： 物品对象实例化时，设置传入的Settings参数：
-
-      ~~~java
+  
+  - 第一种方式： 物品对象实例化时，设置传入的Settings参数：
+  
+    ~~~java
+      //静态创建物品栏时
       public static final Item YOUR_ITEM = new Item(new Item.Settings().itemGroup(ExampleMod.ITEM_GROUP));
       ~~~
-
+  
     - 第二种方式：标签栏声明时：
-
+  
       ~~~java
-       public static final ItemGroup DEMO_GROUP = FabricItemGroupBuilder.create(
-                  new Identifier("demo", "demo_group"))
-                  .icon(() -> new ItemStack(GREEN_APPLE_ITEM))
-                  .appendItems(stacks->{
-                      stacks.add(new ItemStack(GREEN_APPLE_ITEM));
-                  })
-                  .build();
-      ~~~
-
-  - 给标签栏添加翻译词条
-
+      //动态创建物品栏时
+      public static final ItemGroup DEMO_GROUP = FabricItemGroupBuilder.create(
+        new Identifier("demo", "demo_group"))
+          .icon(() -> new ItemStack(GREEN_APPLE_ITEM))
+        .appendItems(stacks->{
+              stacks.add(new ItemStack(GREEN_APPLE_ITEM));
+          })
+          .build();
+    ~~~
+  
+- 给标签栏添加翻译词条
+  
     ~~~json
     "itemGroup.demo.demo_group": "Demo Mod"
     ~~~
-
+  
   - 运行验证是否生效
-
+  
     ![image](./Resource/image/14.png)
 
+## 实现自定义功能的物品
+
+- 创建自定义物品类，继承自`Item`类
+
+  ~~~java
+  public class GreenAppleItem extends Item {
+      public GreenAppleItem(Settings settings) {
+          super(settings);
+      }
+  }
+  ~~~
+
+- 在类中实现重写父类的方法，来实现自定义的功能，以右键使用为例：
+
+  ~~~java
+  //右键使用，会播放羊的叫声    
+  
+  @Override
+      public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) 		{
+          user.playSound(SoundEvents.ENTITY_SHEEP_HURT,1.0F,1.0F);
+          return new TypedActionResult<>				(ActionResult.SUCCESS,user.getStackInHand(hand));
+      }
+  ~~~
+
+  
