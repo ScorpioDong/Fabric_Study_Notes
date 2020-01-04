@@ -1,12 +1,12 @@
 # 第一个方块
 
-- 创建方块
+- 创建方块（以创建一个铁熔炉为例，最好的方法当然是继承原版熔炉的`FurnaceBlock`类或者其父类`AbstractFurnaceBlock` ，这里为了学习，重新写一个铁熔炉类）
 
   ~~~java
   public static final Block IRON_FURNACE_BLOCK = new Block(FabricBlockSettings.of(Material.METAL).build());
   ~~~
 
-- 注册方块和方块物品
+- 注册方块和方块物品（方块对应的物品）
 
   ~~~java
   Registry.register(Registry.BLOCK, new Identifier("demo", "iron_furnace_block"), IRON_FURNACE_BLOCK);
@@ -19,7 +19,9 @@
   Blockstate: src/main/resources/assets/demo/blockstates/iron_furnace_block.json
   Block Model: src/main/resources/assets/demo/models/block/iron_furnace_block.json
   Item Model: src/main/resources/assets/demo/models/item/iron_furnace_block.json
-  Block Texture: src/main/resources/assets/demo/textures/block/iron_furnace_block.png
+  Block Texture: src/main/resources/assets/demo/textures/block/iron_furnace_block_top.png
+  src/main/resources/assets/demo/textures/block/iron_furnace_block_front.png
+  src/main/resources/assets/demo/textures/block/iron_furnace_block_side.png
   ~~~
 
   ~~~json
@@ -37,9 +39,19 @@
       }
   }
   ~~~
-
   ~~~json
-  //Block Model
+  //Block Model  iron_furnace_block_on
+{
+    "parent": "block/orientable",
+    "textures": {
+        "top": "demo:block/iron_furnace_block_top",
+        "front": "demo:block/iron_furnace_block_front_on",
+        "side": "demo:block/iron_furnace_block_side"
+    }
+}
+  ~~~
+  ~~~json
+  //Block Model iron_furnace_block
   {
       "parent": "block/orientable",
       "textures": {
@@ -82,7 +94,7 @@
 
 - 添加战利品表
 
-  - 破坏方块时的掉落物
+  - 生存模式破坏方块时的掉落物
 
   - `src/main/resources/data/damo/loot_tables/blocks/iron_furnace_block.json`
 
@@ -107,7 +119,7 @@
     }
     ~~~
 
-- 运行游戏，发现物品栏显示正常，但放置后材质丢失，因为没有设置方块状态
+- 运行游戏，发现物品栏显示正常，但放置后材质丢失，因为没有设置方块放置时的状态
 
 - 添加方块状态
 
@@ -121,15 +133,9 @@
     }
     ~~~
 
-  - 方块创建修改为自定义方块类
+  
 
-    ~~~java
-    public static final Block IRON_FURNACE_BLOCK = new IronFurnaceBlock(FabricBlockSettings.of(Material.METAL).build());
-    ~~~
-
-    
-
-  - 添加方块状态
+  - 类中添加方块状态
 
     ~~~java
     public static final DirectionProperty FACING;
@@ -146,7 +152,7 @@
     }
     ~~~
 
-  - 重写获取物品放置时的状态方法
+  - 重写`获取物品放置时的状态`方法
 
     ~~~java
     @Override
@@ -154,6 +160,14 @@
     return this.getDefaultState().with(FACING,ctx.getPlayerFacing().getOpposite());
     }
     ~~~
+    
+  - 主模组类中，方块创建修改为自定义方块类
+
+    ~~~java
+    public static final Block IRON_FURNACE_BLOCK = new IronFurnaceBlock(FabricBlockSettings.of(Material.METAL).build());
+    ~~~
+
+    
 
 - 运行游戏，查看效果
 
